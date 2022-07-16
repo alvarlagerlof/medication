@@ -1,8 +1,8 @@
 package com.example.medication
 
+import TabSettings
+import TabTimeline
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.medication.Screens.Start.TabMedications
 import com.example.medication.ui.theme.MedicationTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -106,66 +107,5 @@ fun Start(navController: NavController) {
 
 
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun TabMedications(navController: NavController) {
-    val medications = listOf(
-        "Olanzapine",
-        "Lithionit",
-        "Melatonin",
-        "Imovane",
-        "Other",
-        "Other 2",
-        "Other 3",
-        "Other 4",
-    )
 
-    LazyColumn(
-        verticalArrangement = Arrangement.spacedBy(24.dp),
-        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 16.dp)
-    ) {
-        itemsIndexed(medications) { index, item ->
-            Card(
-                shape = RoundedCornerShape(24.dp),
-                modifier = Modifier
-                    .fillMaxWidth(),
-                onClick = { navController.navigate("detail?id=$index") }
 
-            ) {
-                Column(
-                    modifier = Modifier.padding(24.dp),
-                    verticalArrangement = Arrangement.spacedBy(4.dp),
-                ) {
-                    Text(text = item, style = MaterialTheme.typography.titleLarge)
-                    Text("Next at 22:00")
-                }
-            }
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun TabTimeline() {
-    LazyColumn(
-        verticalArrangement = Arrangement.spacedBy(24.dp),
-        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 16.dp)
-    ) {
-        item {
-            Text("Timeline not done")
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun TabSettings() {
-    LazyColumn(
-        verticalArrangement = Arrangement.spacedBy(24.dp),
-        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 16.dp)
-    ) {
-        item {
-            Text("Settings not done")
-        }
-    }
-}
