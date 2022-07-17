@@ -2,19 +2,15 @@ package com.example.medication
 
 import TabSettings
 import TabTimeline
-import android.util.Log
+import android.app.AlarmManager
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.List
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.outlined.*
-import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material.icons.rounded.ListAlt
-import androidx.compose.material.icons.rounded.Timeline
+import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.Medication
+import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material.icons.outlined.Timeline
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -25,12 +21,15 @@ import androidx.navigation.NavController
 import com.example.medication.Screens.Start.StartViewModel
 import com.example.medication.Screens.Start.TabMedications
 import com.example.medication.ui.theme.MedicationTheme
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
-fun Start(navController: NavController, viewModel: StartViewModel = hiltViewModel()) {
+fun Start(
+    navController: NavController,
+    viewModel: StartViewModel = hiltViewModel(),
+    alarmManager: AlarmManager
+) {
     var selectedItem by remember { mutableStateOf(0) }
 
     val tabs = listOf(
@@ -73,7 +72,7 @@ fun Start(navController: NavController, viewModel: StartViewModel = hiltViewMode
                     )
                     { selectedItem ->
                         when (selectedItem) {
-                            0 -> TabMedications(navController)
+                            0 -> TabMedications(navController, alarmManager = alarmManager)
                             1 -> TabTimeline()
                             2 -> TabSettings()
                         }

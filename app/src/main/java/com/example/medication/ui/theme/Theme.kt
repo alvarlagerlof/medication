@@ -69,7 +69,7 @@ fun MedicationTheme(
 //    SideEffect {
 //        systemUiController.setSystemBarsColor(
 //            color = Color.Transparent,
-//            darkIcons = useDarkIcons
+//            darkIcons = !darkTheme
 //        )
 //
 //        systemUiController.setNavigationBarColor(color = Color.Transparent)

@@ -213,7 +213,7 @@ fun Header(
                     ScheduleItem(
                         uid = 0,
                         medicationUid = medication?.uid ?: 0,
-                        amount = 0f,
+                        amount = 1f,
                         time = LocalTime.now(),
                         onMondays = true,
                         onTuesdays = true,
