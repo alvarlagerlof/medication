@@ -62,18 +62,18 @@ fun MedicationTheme(
         }
     }
 
-
-    val systemUiController = rememberSystemUiController()
-    val useDarkIcons = !isSystemInDarkTheme()
-
-    SideEffect {
-        systemUiController.setSystemBarsColor(
-            color = Color.Transparent,
-            darkIcons = useDarkIcons
-        )
-
-        systemUiController.setNavigationBarColor(color = Color.Transparent)
-    }
+//
+//    val systemUiController = rememberSystemUiController()
+//    val useDarkIcons = !isSystemInDarkTheme()
+//
+//    SideEffect {
+//        systemUiController.setSystemBarsColor(
+//            color = Color.Transparent,
+//            darkIcons = useDarkIcons
+//        )
+//
+//        systemUiController.setNavigationBarColor(color = Color.Transparent)
+//    }
 
     MaterialTheme(
         colorScheme = colorScheme,

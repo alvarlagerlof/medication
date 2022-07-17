@@ -2,6 +2,8 @@ package com.example.medication
 
 import TabSettings
 import TabTimeline
+import android.util.Log
+import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -9,40 +11,51 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.outlined.*
+import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material.icons.rounded.ListAlt
+import androidx.compose.material.icons.rounded.Timeline
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.medication.Screens.Start.StartViewModel
 import com.example.medication.Screens.Start.TabMedications
 import com.example.medication.ui.theme.MedicationTheme
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
-fun Start(navController: NavController) {
+fun Start(navController: NavController, viewModel: StartViewModel = hiltViewModel()) {
     var selectedItem by remember { mutableStateOf(0) }
+
     val tabs = listOf(
-        Pair("Medications", Icons.Filled.List),
-        Pair("Timeline", Icons.Filled.CheckCircle),
-        Pair("Settings", Icons.Filled.Settings)
+        Pair("Medications", Icons.Outlined.Medication),
+        Pair("Timeline", Icons.Outlined.Timeline),
+        Pair("Settings", Icons.Outlined.Settings)
     )
 
     val scrollBehavior =
         TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarScrollState())
+
+    val coroutineScope = rememberCoroutineScope()
 
     MedicationTheme {
         Scaffold(
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
             topBar = {
                 SmallTopAppBar(
-                    modifier = Modifier.height(
-                        92.dp + WindowInsets.statusBars.asPaddingValues()
-                            .calculateBottomPadding()
-                    ),
+//                    modifier = Modifier.height(
+//                        92.dp + WindowInsets.statusBars.asPaddingValues()
+//                            .calculateBottomPadding()
+//                    ),
                     title = {
                         Text(
-                            modifier = Modifier.padding(WindowInsets.statusBars.asPaddingValues()),
+//                            modifier = Modifier.padding(WindowInsets.statusBars.asPaddingValues()),
                             text = tabs[selectedItem].first
                         )
                     },
@@ -51,10 +64,19 @@ fun Start(navController: NavController) {
             },
             content = { innerPadding ->
                 Surface(Modifier.padding(innerPadding)) {
-                    when (selectedItem) {
-                        0 -> TabMedications(navController)
-                        1 -> TabTimeline()
-                        2 -> TabSettings()
+                    AnimatedContent(
+                        targetState = selectedItem,
+                        transitionSpec = {
+                            slideInVertically { 64 } + fadeIn() with
+                                    fadeOut()
+                        }
+                    )
+                    { selectedItem ->
+                        when (selectedItem) {
+                            0 -> TabMedications(navController)
+                            1 -> TabTimeline()
+                            2 -> TabSettings()
+                        }
                     }
                 }
             },
@@ -63,11 +85,18 @@ fun Start(navController: NavController) {
                 if (selectedItem == 0) {
                     LargeFloatingActionButton(
                         shape = RoundedCornerShape(percent = 100),
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary,
                         elevation = FloatingActionButtonDefaults.elevation(0.dp),
-                        onClick = { navController.navigate("detail") }
+                        onClick = {
+                            coroutineScope.launch {
+                                val uid = viewModel.addMedication(Medication(0, ""))
+                                navController.navigate("detail?uid=${uid}&edit=${false}")
+                            }
+                        }
                     ) {
                         Icon(
-                            Icons.Filled.Add,
+                            Icons.Outlined.Add,
                             contentDescription = "Localized description",
                             modifier = Modifier.size(FloatingActionButtonDefaults.LargeIconSize),
                         )

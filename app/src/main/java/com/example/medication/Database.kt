@@ -36,7 +36,14 @@ data class ScheduleItem(
     @PrimaryKey(autoGenerate = true) val uid: Int,
     var medicationUid: Int,
     var time: LocalTime,
-    var amount: Float
+    var amount: Float,
+    var onMondays: Boolean,
+    var onTuesdays: Boolean,
+    var onWednedays: Boolean,
+    var onThursdays: Boolean,
+    var onFridays: Boolean,
+    var onSaturdays: Boolean,
+    var onSundays: Boolean
 )
 
 @Dao
@@ -59,17 +66,27 @@ interface MedicationDao {
 
 @Dao
 interface ScheduleItemDao {
-    @Query("SELECT * FROM schedule_item WHERE medicationUid LIKE :medicationUid")
+    @Query("SELECT * FROM schedule_item WHERE medicationUid LIKE :medicationUid ORDER BY time")
     fun findByMedicatitonUid(medicationUid: Int): Flow<List<ScheduleItem>>
 
     @Insert
     suspend fun insert(scheduleItem: ScheduleItem): Long
 
+    @Update
+    suspend fun update(scheduleItem: ScheduleItem)
+
     @Delete
     suspend fun delete(scheduleItem: ScheduleItem)
 }
 
-@Database(entities = [Medication::class, ScheduleItem::class], version = 1)
+@Database(
+    entities = [Medication::class, ScheduleItem::class],
+    version = 1,
+//    autoMigrations = [
+//        AutoMigration(from = 1, to = 2)
+//    ],
+    exportSchema = true
+)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun medicationDao(): MedicationDao
@@ -79,7 +96,7 @@ abstract class AppDatabase : RoomDatabase() {
 class DatabaseRepository @Inject constructor(
     private val medicationDao: MedicationDao,
     private val scheduleItemDao: ScheduleItemDao
-){
+) {
     val medications: Flow<List<Medication>> = medicationDao.getAll()
 
     fun getMedication(uid: Int): Flow<Medication> = medicationDao.findByUid(uid)
@@ -90,9 +107,12 @@ class DatabaseRepository @Inject constructor(
 
     suspend fun deleteMedication(medication: Medication) = medicationDao.delete(medication)
 
-    fun getSchedule(medicationUid: Int): Flow<List<ScheduleItem>> = scheduleItemDao.findByMedicatitonUid(medicationUid)
+    fun getSchedule(medicationUid: Int): Flow<List<ScheduleItem>> =
+        scheduleItemDao.findByMedicatitonUid(medicationUid)
 
     suspend fun addSheduleItem(scheduleItem: ScheduleItem) = scheduleItemDao.insert(scheduleItem)
+
+    suspend fun updateSheduleItem(scheduleItem: ScheduleItem) = scheduleItemDao.update(scheduleItem)
 
     suspend fun deleteSheduleItem(scheduleItem: ScheduleItem) = scheduleItemDao.delete(scheduleItem)
 }

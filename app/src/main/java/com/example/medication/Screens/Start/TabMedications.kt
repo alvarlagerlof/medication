@@ -15,27 +15,20 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.medication.Medication
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TabMedications(navController: NavController, viewModel: StartViewModel = hiltViewModel()) {
-//    val medications = listOf(
-//        "Olanzapine",
-//        "Lithionit",
-//        "Melatonin",
-//        "Imovane",
-//        "Other",
-//        "Other 2",
-//        "Other 3",
-//        "Other 4",
-//    )
     val medications: List<Medication>? by viewModel.medications.observeAsState()
 
     LazyColumn(
-        verticalArrangement = Arrangement.spacedBy(24.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        modifier = Modifier.fillMaxHeight(),
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 16.dp)
     ) {
         itemsIndexed(medications ?: emptyList()) { index, item ->
@@ -44,7 +37,7 @@ fun TabMedications(navController: NavController, viewModel: StartViewModel = hil
                 modifier = Modifier
                     .fillMaxWidth(),
                 onClick = {
-                    navController.navigate("detail?uid=${item.uid}")
+                    navController.navigate("detail?uid=${item.uid}&edit=${true}")
                 }
 
             ) {
@@ -52,7 +45,10 @@ fun TabMedications(navController: NavController, viewModel: StartViewModel = hil
                     modifier = Modifier.padding(24.dp),
                     verticalArrangement = Arrangement.spacedBy(4.dp),
                 ) {
-                    Text(text = item.name, style = MaterialTheme.typography.titleLarge)
+                    Text(
+                        text = viewModel.prettyName(item.name),
+                        style = MaterialTheme.typography.titleLarge
+                    )
                     Text("Next at 22:00")
                 }
             }

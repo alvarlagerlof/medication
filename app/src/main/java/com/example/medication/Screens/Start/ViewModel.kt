@@ -7,6 +7,7 @@ import androidx.lifecycle.*
 import com.example.medication.DatabaseRepository
 import com.example.medication.Medication
 import com.example.medication.MedicationDao
+import com.example.medication.ScheduleItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -16,5 +17,12 @@ import javax.inject.Inject
 class StartViewModel @Inject constructor(
     private val repository: DatabaseRepository
 ) : ViewModel() {
-    val medications: LiveData<List<Medication>> = repository.medications.asLiveData()
+    val medications = repository.medications.asLiveData()
+
+    suspend fun addMedication(medication: Medication): Int {
+        return repository.addMedication(Medication(0, "")).toInt()
+    }
+
+    fun prettyName(name: String): String = if (name == "") "Untitled" else name
+
 }

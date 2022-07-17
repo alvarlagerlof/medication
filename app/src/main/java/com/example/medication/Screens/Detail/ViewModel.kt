@@ -18,23 +18,11 @@ class DetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val repository: DatabaseRepository
 ) : ViewModel() {
-    val isEditMode: Boolean = savedStateHandle.contains("uid")
+    val uid = savedStateHandle.get<Int>("uid")!!
+    val isEditMode = savedStateHandle.get<Boolean>("edit")!!
 
-    val uid: Int by lazy {
-        when (isEditMode) {
-            true -> savedStateHandle.get<String>("uid")?.toInt() ?: 0
-            false -> {
-                var uid: Int = 0
-                viewModelScope.launch() {
-                    uid = repository.addMedication(Medication(0, "")).toInt()
-                }
-                uid
-            }
-        }
-    }
-
-    val medication = repository.getMedication(uid).asLiveData()
-    val schedule = repository.getSchedule(uid).asLiveData()
+    var medication = repository.getMedication(uid).asLiveData()
+    var schedule = repository.getSchedule(uid).asLiveData()
 
     fun update(medication: Medication) = viewModelScope.launch() {
         repository.updateMedication(medication)
@@ -47,4 +35,15 @@ class DetailViewModel @Inject constructor(
     fun addScheduleItem(scheduleItem: ScheduleItem) = viewModelScope.launch {
         repository.addSheduleItem(scheduleItem)
     }
+
+    fun updateScheduleItem(scheduleItem: ScheduleItem) = viewModelScope.launch {
+        repository.updateSheduleItem(scheduleItem)
+    }
+
+    fun deleteScheduleItem(scheduleItem: ScheduleItem) = viewModelScope.launch {
+        repository.deleteSheduleItem(scheduleItem)
+    }
+
+    fun prettyName(name: String): String = if (name == "") "Untitled" else name
+
 }

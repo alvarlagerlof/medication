@@ -19,6 +19,12 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += ["room.schemaLocation": "$projectDir/schemas".toString()]
+            }
+        }
     }
 
     buildTypes {
@@ -59,12 +65,10 @@ dependencies {
     kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
     implementation 'androidx.hilt:hilt-navigation-compose:1.0.0'
 
-    // Hilt extensions
-    implementation("it.czerwinski.android.hilt:hilt-extensions:1.1.0")
-    kapt("it.czerwinski.android.hilt:hilt-processor:1.1.0")
-
     // Accompanist
-    implementation "com.google.accompanist:accompanist-systemuicontroller:0.24.13-rc"
+    implementation "com.google.accompanist:accompanist-systemuicontroller:$accompanist_version"
+    implementation "com.google.accompanist:accompanist-navigation-animation:$accompanist_version"
+    implementation "com.google.accompanist:accompanist-insets-ui:$accompanist_version"
 
     // Material3
     implementation "androidx.compose.material3:material3:$material3_version"
@@ -78,6 +82,7 @@ dependencies {
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
+    implementation "androidx.compose.material:material-icons-extended:$compose_version"
 
     // Lifecycle
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.5.0'
