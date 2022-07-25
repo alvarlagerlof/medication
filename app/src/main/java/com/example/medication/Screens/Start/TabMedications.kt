@@ -20,9 +20,15 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
+import com.example.medication.ForegroundService
 import com.example.medication.Medication
+import com.example.medication.ReminderWorker
 import com.example.medication.SendNotification
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 val TAG = "TabMedications"
 
@@ -46,28 +52,36 @@ fun TabMedications(
         item {
 
             FilledTonalButton(onClick = {
+
+                /*val request = OneTimeWorkRequestBuilder<ReminderWorker>().build()
+
+                WorkManager
+                    .getInstance(context)
+                    .enqueue(request)*/
+
+
 //                val i = Intent(context, MainActivity::class.java)
 //                val pendingIntent =
 //                    PendingIntent.getActivity(context, 0, i, PendingIntent.FLAG_IMMUTABLE)
 
-                Log.d(TAG, "tapped button")
-
-
-                val calNow: Calendar = Calendar.getInstance()
+//                Log.d(TAG, "tapped button")
+//
+//
+//                val calNow: Calendar = Calendar.getInstance()
 //                val calSet: Calendar = calNow.clone() as Calendar
 //                calSet.set(Calendar.HOUR_OF_DAY, 22)
 //                calSet.set(Calendar.MINUTE, 33)
 //                calSet.set(Calendar.SECOND, 0)
 //                calSet.set(Calendar.MILLISECOND, 0)
 
-                if (alarmManager.canScheduleExactAlarms()) {
-                    val intent = Intent(context, SendNotification::class.java)
-                    val pendingIntent =
-                        PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
-
-                    alarmManager.set(RTC_WAKEUP, calNow.timeInMillis, pendingIntent)
-
-                    Log.d(TAG, "scheduled alarm")
+//                if (alarmManager.canScheduleExactAlarms()) {
+//                    val intent = Intent(context, ForegroundService::class.java)
+//                    val pendingIntent =
+//                        PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+//
+//                    alarmManager.setExact(RTC_WAKEUP, calNow.timeInMillis, pendingIntent)
+//
+//                    Log.d(TAG, "scheduled alarm")
 
 //                    alarmManager.setAlarmClock(
 //                        AlarmManager.AlarmClockInfo(
@@ -75,7 +89,7 @@ fun TabMedications(
 //                            pendingIntent
 //                        ), pendingIntent
 //                    )
-                }
+//                }
 
             }, content = { Text("Add alarm") })
         }

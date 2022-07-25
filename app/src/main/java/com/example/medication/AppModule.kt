@@ -30,4 +30,8 @@ object AppModule {
     @Singleton
     @Provides
     fun scheduleItemDao(db: AppDatabase) = db.scheduleItemDao()
+
+    @Singleton
+    @Provides
+    fun timelineDao(db: AppDatabase) = db.timelineDao()
 }

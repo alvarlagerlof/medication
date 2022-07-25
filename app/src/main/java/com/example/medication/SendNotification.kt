@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE
 import androidx.core.app.NotificationManagerCompat
 
 
@@ -54,9 +55,13 @@ class SendNotification : BroadcastReceiver() {
             .setContentText("content")
             .setContentIntent(openIntent)
             .setSmallIcon(R.drawable.notification_icon)
-            .setPriority(NotificationCompat.PRIORITY_MAX)
+/*
             .setOngoing(true)
+*/
             .addAction(0, "Taken", takenIntent)
+            .setForegroundServiceBehavior(FOREGROUND_SERVICE_IMMEDIATE)
+
+        // context.startForeground(notificationId, builder)
 
         with(NotificationManagerCompat.from(context)) {
             // notificationId is a unique int for each notification that you must define
